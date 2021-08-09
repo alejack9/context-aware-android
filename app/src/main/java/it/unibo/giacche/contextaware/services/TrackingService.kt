@@ -76,9 +76,8 @@ class TrackingService : LifecycleService() {
     private fun sendDiscarded() = GlobalScope.launch(Dispatchers.Main) {
         if (sendingDiscarded) return@launch
         sendingDiscarded = true
-        var toSend: FeatureCollection
-        do {
-            toSend = discarded.remove()
+        while (!discarded.isEmpty()) {
+            val toSend = discarded.remove()
             try {
                 sender.send(toSend)
             } catch (e: IOException) {
@@ -86,7 +85,7 @@ class TrackingService : LifecycleService() {
                 Timber.e(e)
                 delay(Constants.SEND_RETRY_TIMEOUT)
             }
-        } while (!discarded.isEmpty())
+        }
         sendingDiscarded = false
     }
 
@@ -133,7 +132,7 @@ class TrackingService : LifecycleService() {
     }
 
     // Called when we send an intent to the service
-    // three possible actions to send: resume/pause/stop
+// three possible actions to send: resume/pause/stop
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when (it.action) {
