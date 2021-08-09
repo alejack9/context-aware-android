@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ContextAware</string>
+    <string name="rationale_message">You need to accept the permissions in order to use this app.</string>
+    <string name="gps_disabled_message">Localization is off, turn on to start the service.</string>
+</resources>
