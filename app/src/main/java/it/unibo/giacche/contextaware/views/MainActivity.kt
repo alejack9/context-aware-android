@@ -1,5 +1,6 @@
 package it.unibo.giacche.contextaware.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.location.LocationManager
@@ -13,28 +14,33 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.unibo.giacche.contextaware.R
 import it.unibo.giacche.contextaware.models.Status
 import it.unibo.giacche.contextaware.services.TrackingService
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_STOP_SERVICE
 import it.unibo.giacche.contextaware.utils.PermissionsManager
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
-import timber.log.Timber
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-    private lateinit var switch: SwitchCompat
+    private lateinit var serviceActivationSwitch: SwitchCompat
+    private lateinit var dummyUpdatesSwitch: SwitchCompat
+    private lateinit var gpsPerturbationSwitch: SwitchCompat
     private lateinit var textView: TextView
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PermissionsManager.requestPermissions(this)
         setContentView(R.layout.activity_main)
 
-        switch = findViewById(R.id.service_toggle)
+        serviceActivationSwitch = findViewById(R.id.service_toggle)
+        dummyUpdatesSwitch = findViewById(R.id.dummy_updates)
+        gpsPerturbationSwitch = findViewById(R.id.gps_perturbation)
         textView = findViewById(R.id.textView)
-        TrackingService.collectedNoise.observe(this, {
-            Timber.d("New noise information received: $it")
+        TrackingService.averageNoise.observe(this, {
             when(it.status) {
                 Status.ERROR -> textView.text = "Error: " + it.message
                 Status.SUCCESS -> textView.text = it.data.toString()
@@ -44,8 +50,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         checkLocationTrackerAvailability()
 
-        switch.setOnCheckedChangeListener { _, isChecked ->
+        serviceActivationSwitch.setOnCheckedChangeListener { _, isChecked ->
             sendCommandToService(if (isChecked) ACTION_START_OR_RESUME_SERVICE else ACTION_STOP_SERVICE)
+        }
+
+        dummyUpdatesSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sendCommandToService(if(isChecked) ACTION_ENABLE_DUMMY_UPDATES else ACTION_DISABLE_DUMMY_UPDATES)
         }
     }
 
@@ -65,8 +75,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 .show()
         else {
             sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-            switch.isChecked = true
-            Timber.d("Active")
+            serviceActivationSwitch.isChecked = true
         }
     }
 

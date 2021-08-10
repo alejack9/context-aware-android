@@ -5,14 +5,19 @@ import android.location.Location
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.AndroidEntryPoint
-import it.unibo.giacche.contextaware.communication.CanReceiveNoise
+import it.unibo.giacche.contextaware.communication.*
 import it.unibo.giacche.contextaware.models.FeatureFactory
 import it.unibo.giacche.contextaware.noise.CanReturnNoise
-import it.unibo.giacche.contextaware.communication.CanSendLocation
+import it.unibo.giacche.contextaware.communication.privacymechanisms.DummyLocationMaker
+import it.unibo.giacche.contextaware.communication.privacymechanisms.IdentityLocationMaker
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.models.Resource
 import it.unibo.giacche.contextaware.models.Status
 import it.unibo.giacche.contextaware.utils.Constants
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_PAUSE_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_STOP_SERVICE
@@ -63,14 +68,16 @@ class TrackingService : LifecycleService() {
     }
 
     private fun getAverageNoise(location: Location) = GlobalScope.launch(Dispatchers.Main) {
-        val resource = try {
+       val resource = try {
             val res = getter.getNoise(location)
             if (res != null) Resource(Status.SUCCESS, res, null)
             else Resource(Status.ERROR, null, "No information here!")
-        } catch (e: Exception) {
-            Resource(Status.ERROR, null, e.message)
-        }
-        collectedNoise.postValue(resource)
+        } catch (e: Error) {
+           Resource(Status.ERROR, null, e.message)
+       }catch (e: Exception) {
+           Resource(Status.ERROR, null, e.message)
+       }
+        averageNoise.postValue(resource)
     }
 
     private fun sendDiscarded() = GlobalScope.launch(Dispatchers.Main) {
@@ -109,7 +116,7 @@ class TrackingService : LifecycleService() {
 
     companion object {
         val isActive = MutableLiveData<Boolean>()
-        val collectedNoise = MutableLiveData<Resource<Double>>()
+        val averageNoise = MutableLiveData<Resource<Double>>()
         private var isKilled = false
         private var sendingDiscarded = false
         private val recorded: Queue<FeatureCollection> = LinkedList<FeatureCollection>().apply {
@@ -151,6 +158,23 @@ class TrackingService : LifecycleService() {
                 ACTION_STOP_SERVICE -> {
                     killService()
                     Timber.d("Service Stopped")
+                }
+                ACTION_ENABLE_DUMMY_UPDATES -> {
+                    OkHttpClientWrapper.dummyLocationMaker = DummyLocationMaker
+                    Timber.d("Dummy updates enabled")
+                }
+                ACTION_DISABLE_DUMMY_UPDATES -> {
+                    OkHttpClientWrapper.dummyLocationMaker = IdentityLocationMaker
+                    Timber.d("Dummy updates disabled")
+                }
+                ACTION_ENABLE_GPS_PERTURBATION -> {
+                    // TODO
+//                    OkHttpClientWrapper.gpsPerturbatorMaker = DummyLocationMaker
+                    Timber.d("Dummy updates enabled")
+                }
+                ACTION_DISABLE_GPS_PERTURBATION -> {
+                    OkHttpClientWrapper.dummyLocationMaker = IdentityLocationMaker
+                    Timber.d("Dummy updates disabled")
                 }
             }
         }

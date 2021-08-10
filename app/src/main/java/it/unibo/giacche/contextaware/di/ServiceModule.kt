@@ -14,7 +14,7 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import it.unibo.giacche.contextaware.R
-import it.unibo.giacche.contextaware.communication.OkHttpSingleton
+import it.unibo.giacche.contextaware.communication.OkHttpClientWrapper
 import it.unibo.giacche.contextaware.communication.getters.NoiseGetter
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.communication.senders.LocationSender
@@ -24,8 +24,6 @@ import it.unibo.giacche.contextaware.communication.senders.LocationSenderMockup
 import it.unibo.giacche.contextaware.utils.Constants
 import it.unibo.giacche.contextaware.utils.NotificationsManager
 import it.unibo.giacche.contextaware.views.MainActivity
-import okhttp3.OkHttpClient
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ServiceComponent::class)
@@ -77,8 +75,8 @@ object ServiceModule {
 
     @ServiceScoped
     @Provides
-    fun provideOkHttpClient(
-    ) = OkHttpSingleton.INSTANCE
+    fun provideOkHttpClientWrapper(
+    ) = OkHttpClientWrapper()
 
     @ServiceScoped
     @Provides
@@ -92,12 +90,12 @@ object ServiceModule {
 
     @Provides
     fun provideNoiseGetter(
-        client: OkHttpClient
+        client: OkHttpClientWrapper
     ) = NoiseGetter(client)
 
     @Provides
     fun provideLocationSender(
-        client: OkHttpClient
+        client: OkHttpClientWrapper
     ) = LocationSender(client)
 
     @Provides
