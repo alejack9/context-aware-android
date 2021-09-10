@@ -2,7 +2,9 @@ package it.unibo.giacche.contextaware.communication
 
 import android.location.Location
 import com.fasterxml.jackson.databind.ObjectMapper
-import it.unibo.giacche.contextaware.communication.privacymechanisms.IdentityLocationMaker
+import it.unibo.giacche.contextaware.location.privacymechanisms.IdentityLocationMaker
+import it.unibo.giacche.contextaware.location.CanMakeDummyLocation
+import it.unibo.giacche.contextaware.location.CanMakeGpsPerturbation
 import it.unibo.giacche.contextaware.utils.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -15,19 +17,18 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.geojson.FeatureCollection
 import kotlin.random.Random
 
-class OkHttpClientWrapper{
+class OkHttpClientWrapper {
     companion object {
         private val client = OkHttpClient()
         var dummyLocationMaker: CanMakeDummyLocation = IdentityLocationMaker
-        var gpsPerturbatorMaker: CanMakeGpsPerturbation = IdentityLocationMaker
+        var gpsPerturbator: CanMakeGpsPerturbation = IdentityLocationMaker
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    suspend fun send(locations: FeatureCollection) = withContext(Dispatchers.IO) {
-        // TODO DUMMY LOCATION MAKER
+    suspend fun send(features: FeatureCollection) = withContext(Dispatchers.IO) {
         val request = Request.Builder().url(Constants.DESTINATION_URL)
             .post(
-                ObjectMapper().writeValueAsString(locations)
+                ObjectMapper().writeValueAsString(features)
                     .toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()!!)
             )
             .build()
@@ -42,10 +43,10 @@ class OkHttpClientWrapper{
     suspend fun getNoise(location: Location): Double? =
         withContext(Dispatchers.IO) {
             val correct = Random.nextInt(0, Constants.DUMMY_UPDATES)
-
-            val locations = (0..Constants.DUMMY_UPDATES).map { i ->
-                if (i != correct) dummyLocationMaker.from(location) else location
+            val locations = (0..Constants.DUMMY_UPDATES).map {
+                if (it != correct) dummyLocationMaker.from(location) else location
             }
+
             val req = createRequest(locations)
 
             return@withContext client.newCall(req)

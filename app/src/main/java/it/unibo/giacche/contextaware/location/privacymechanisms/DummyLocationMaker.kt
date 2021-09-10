@@ -1,7 +1,7 @@
-package it.unibo.giacche.contextaware.communication.privacymechanisms
+package it.unibo.giacche.contextaware.location.privacymechanisms
 
 import android.location.Location
-import it.unibo.giacche.contextaware.communication.CanMakeDummyLocation
+import it.unibo.giacche.contextaware.location.CanMakeDummyLocation
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.random.Random

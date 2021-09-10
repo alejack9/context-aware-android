@@ -8,8 +8,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import it.unibo.giacche.contextaware.communication.*
 import it.unibo.giacche.contextaware.models.FeatureFactory
 import it.unibo.giacche.contextaware.noise.CanReturnNoise
-import it.unibo.giacche.contextaware.communication.privacymechanisms.DummyLocationMaker
-import it.unibo.giacche.contextaware.communication.privacymechanisms.IdentityLocationMaker
+import it.unibo.giacche.contextaware.location.privacymechanisms.DummyLocationMaker
+import it.unibo.giacche.contextaware.location.privacymechanisms.IdentityLocationMaker
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.models.Resource
 import it.unibo.giacche.contextaware.models.Status
@@ -49,14 +49,29 @@ class TrackingService : LifecycleService() {
     @Inject
     lateinit var audioManager: CanReturnNoise
 
+    companion object {
+        val isActive = MutableLiveData<Boolean>()
+        val averageNoise = MutableLiveData<Resource<Double>>()
+        private var isKilled = false
+        private var sendingDiscarded = false
+        private val recorded: Queue<FeatureCollection> = LinkedList<FeatureCollection>().apply {
+            this.add(FeatureCollection())
+        }
+        val collectedFeaturesMessage = MutableLiveData("")
+        val lastNoiseLevel = MutableLiveData<Double?>()
+        private val discarded: Queue<FeatureCollection> = LinkedList()
+    }
+
     private val locationHandler = fun(location: Location) {
+        if (!isActive.value!!) return
         audioManager.getNoise { noise ->
             recorded.last().add(FeatureFactory.build(location, noise))
+            lastNoiseLevel.postValue(noise)
 
             if (recorded.peek()!!.features.size >= Constants.RECORDED_LOCATION_BUFFER_SIZE)
                 sendData()
             else
-                notificationsManager.setText(
+                collectedFeaturesMessage.postValue(
                     "${recorded.peek()!!.features.size} / ${
                         Constants.RECORDED_LOCATION_BUFFER_SIZE
                     }"
@@ -68,15 +83,15 @@ class TrackingService : LifecycleService() {
     }
 
     private fun getAverageNoise(location: Location) = GlobalScope.launch(Dispatchers.Main) {
-       val resource = try {
+        val resource = try {
             val res = getter.getNoise(location)
-            if (res != null) Resource(Status.SUCCESS, res, null)
-            else Resource(Status.ERROR, null, "No information here!")
+            if (res != null) Resource.success(res)
+            else Resource.error("No information here!")
         } catch (e: Error) {
-           Resource(Status.ERROR, null, e.message)
-       }catch (e: Exception) {
-           Resource(Status.ERROR, null, e.message)
-       }
+            Resource.error(e.message ?: "Unknown error")
+        } catch (e: Exception) {
+            Resource.error(e.message ?: "Unknown error")
+        }
         averageNoise.postValue(resource)
     }
 
@@ -98,12 +113,16 @@ class TrackingService : LifecycleService() {
 
     private fun sendData() {
         val toInsert = recorded.remove()
+        lastNoiseLevel.postValue(null)
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 sender.send(toInsert)
-                notificationsManager.setText(
+                collectedFeaturesMessage.postValue(
                     "Last Sent: ${
-                        SimpleDateFormat("HH:mm:ss dd/MM", Locale.ITALY).format(Date())
+                        SimpleDateFormat(
+                            "HH:mm:ss dd/MM",
+                            Locale.ITALY
+                        ).format(Date())
                     }"
                 )
             } catch (e: IOException) {
@@ -112,17 +131,6 @@ class TrackingService : LifecycleService() {
             }
         }
         recorded.add(FeatureCollection())
-    }
-
-    companion object {
-        val isActive = MutableLiveData<Boolean>()
-        val averageNoise = MutableLiveData<Resource<Double>>()
-        private var isKilled = false
-        private var sendingDiscarded = false
-        private val recorded: Queue<FeatureCollection> = LinkedList<FeatureCollection>().apply {
-            this.add(FeatureCollection())
-        }
-        private val discarded: Queue<FeatureCollection> = LinkedList()
     }
 
     override fun onCreate() {
@@ -135,6 +143,10 @@ class TrackingService : LifecycleService() {
             locationController.updateLocationTracking(it, locationHandler)
             if (!isKilled)
                 notificationsManager.viewNotification()
+        })
+
+        collectedFeaturesMessage.observe(this, {
+            notificationsManager.setText(it)
         })
     }
 
@@ -173,7 +185,7 @@ class TrackingService : LifecycleService() {
                     Timber.d("Dummy updates enabled")
                 }
                 ACTION_DISABLE_GPS_PERTURBATION -> {
-                    OkHttpClientWrapper.dummyLocationMaker = IdentityLocationMaker
+                    OkHttpClientWrapper.gpsPerturbator = IdentityLocationMaker
                     Timber.d("Dummy updates disabled")
                 }
             }

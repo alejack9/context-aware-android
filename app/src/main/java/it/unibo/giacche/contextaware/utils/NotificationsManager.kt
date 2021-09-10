@@ -23,7 +23,6 @@ class NotificationsManager(
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel() {
-
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             NOTIFICATION_CHANNEL_NAME,

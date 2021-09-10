@@ -19,7 +19,6 @@ class LocationController(
         object : LocationCallback() {
             override fun onLocationResult(result: LocationResult) {
                 super.onLocationResult(result)
-                if (!TrackingService.isActive.value!!) return
                 locationHandler(result.locations[0])
             }
         }

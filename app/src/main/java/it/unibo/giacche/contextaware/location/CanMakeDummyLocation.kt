@@ -1,4 +1,4 @@
-package it.unibo.giacche.contextaware.communication
+package it.unibo.giacche.contextaware.location
 
 import android.location.Location
 

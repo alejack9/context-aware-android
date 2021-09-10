@@ -15,7 +15,9 @@ import it.unibo.giacche.contextaware.R
 import it.unibo.giacche.contextaware.models.Status
 import it.unibo.giacche.contextaware.services.TrackingService
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_STOP_SERVICE
 import it.unibo.giacche.contextaware.utils.PermissionsManager
@@ -28,7 +30,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var serviceActivationSwitch: SwitchCompat
     private lateinit var dummyUpdatesSwitch: SwitchCompat
     private lateinit var gpsPerturbationSwitch: SwitchCompat
-    private lateinit var textView: TextView
+    private lateinit var noiseTextView: TextView
+    private lateinit var collectedFeaturesTextView: TextView
+    private lateinit var collectedNoiseTextView: TextView
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,13 +43,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         serviceActivationSwitch = findViewById(R.id.service_toggle)
         dummyUpdatesSwitch = findViewById(R.id.dummy_updates)
         gpsPerturbationSwitch = findViewById(R.id.gps_perturbation)
-        textView = findViewById(R.id.textView)
+        noiseTextView = findViewById(R.id.noiseTextView)
+        collectedFeaturesTextView = findViewById(R.id.collectedFeaturesTextView)
+        collectedNoiseTextView = findViewById(R.id.collectedNoiseTextView)
+
         TrackingService.averageNoise.observe(this, {
-            when(it.status) {
-                Status.ERROR -> textView.text = "Error: " + it.message
-                Status.SUCCESS -> textView.text = it.data.toString()
-                Status.LOADING -> textView.text = "Loading: " + it.message
+            when (it.status) {
+                Status.ERROR -> noiseTextView.text = "Error: " + it.message
+                Status.SUCCESS -> noiseTextView.text = it.data.toString()
+                Status.LOADING -> noiseTextView.text = "Loading: " + it.message
             }
+        })
+
+        TrackingService.lastNoiseLevel.observe(this, {
+            collectedNoiseTextView.text = if (it != null) "$it\r\n${collectedNoiseTextView.text}"
+            else ""
+        })
+
+        TrackingService.collectedFeaturesMessage.observe(this, {
+            collectedFeaturesTextView.text = it
         })
 
         checkLocationTrackerAvailability()
@@ -55,7 +71,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         dummyUpdatesSwitch.setOnCheckedChangeListener { _, isChecked ->
-            sendCommandToService(if(isChecked) ACTION_ENABLE_DUMMY_UPDATES else ACTION_DISABLE_DUMMY_UPDATES)
+            sendCommandToService(if (isChecked) ACTION_ENABLE_DUMMY_UPDATES else ACTION_DISABLE_DUMMY_UPDATES)
+        }
+
+        gpsPerturbationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sendCommandToService(if (isChecked) ACTION_ENABLE_GPS_PERTURBATION else ACTION_DISABLE_GPS_PERTURBATION)
         }
     }
 
@@ -73,10 +93,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 ) { dialog, _ -> dialog.cancel() }
                 .create()
                 .show()
-        else {
-            sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-            serviceActivationSwitch.isChecked = true
-        }
     }
 
     private fun sendCommandToService(action: String) =
