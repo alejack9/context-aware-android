@@ -30,7 +30,9 @@ class NoiseGetter : CanReceiveNoise {
         val correct = Random.nextInt(0, Constants.DUMMY_UPDATES)
         val locations = (0..Constants.DUMMY_UPDATES).map {
             if (it != correct)
-                dummyLocationMaker.from(location.toModifiedLocation())
+                gpsPerturbator.from(
+                    dummyLocationMaker.from(location.toModifiedLocation())
+                )
             else location.toModifiedLocation()
         }
 
