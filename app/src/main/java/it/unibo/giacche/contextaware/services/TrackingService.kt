@@ -135,7 +135,7 @@ class TrackingService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        isActive.postValue(true)
+        isActive.postValue(false)
 
         notificationsManager.startForegroundService(this)
 
