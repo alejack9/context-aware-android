@@ -12,8 +12,8 @@ class LocationSenderMockup : CanSendLocation {
     private val objMapper = ObjectMapper()
 
     @Suppress("BlockingMethodInNonBlockingContext")
-    override suspend fun send(locations: FeatureCollection) {
-        val serialized = objMapper.writeValueAsString(locations)
+    override suspend fun send(features: FeatureCollection) {
+        val serialized = objMapper.writeValueAsString(features)
         Timber.d(
             "Sending to ${Constants.DESTINATION_URL}:\r\n$serialized..."
         )
