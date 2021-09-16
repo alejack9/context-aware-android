@@ -14,7 +14,6 @@ import dagger.hilt.android.components.ServiceComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import it.unibo.giacche.contextaware.R
-import it.unibo.giacche.contextaware.communication.OkHttpClientWrapper
 import it.unibo.giacche.contextaware.communication.getters.NoiseGetter
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.communication.senders.LocationSender
@@ -75,11 +74,6 @@ object ServiceModule {
 
     @ServiceScoped
     @Provides
-    fun provideOkHttpClientWrapper(
-    ) = OkHttpClientWrapper()
-
-    @ServiceScoped
-    @Provides
     fun provideLocationManager(
         fused: FusedLocationProviderClient
     ) = LocationController(fused)
@@ -90,13 +84,11 @@ object ServiceModule {
 
     @Provides
     fun provideNoiseGetter(
-        client: OkHttpClientWrapper
-    ) = NoiseGetter(client)
+    ) = NoiseGetter()
 
     @Provides
     fun provideLocationSender(
-        client: OkHttpClientWrapper
-    ) = LocationSender(client)
+    ) = LocationSender()
 
     @Provides
     fun provideAudioManagerMockup() : AudioManagerMockup =
