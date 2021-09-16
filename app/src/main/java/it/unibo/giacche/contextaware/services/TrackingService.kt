@@ -11,8 +11,8 @@ import it.unibo.giacche.contextaware.noise.CanReturnNoise
 import it.unibo.giacche.contextaware.location.privacymechanisms.DummyLocationMaker
 import it.unibo.giacche.contextaware.location.privacymechanisms.IdentityLocationMaker
 import it.unibo.giacche.contextaware.location.LocationController
+import it.unibo.giacche.contextaware.location.privacymechanisms.GpsPerturbator
 import it.unibo.giacche.contextaware.models.Resource
-import it.unibo.giacche.contextaware.models.Status
 import it.unibo.giacche.contextaware.utils.Constants
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
@@ -172,21 +172,20 @@ class TrackingService : LifecycleService() {
                     Timber.d("Service Stopped")
                 }
                 ACTION_ENABLE_DUMMY_UPDATES -> {
-                    OkHttpClientWrapper.dummyLocationMaker = DummyLocationMaker
+                    getter.setDummyUpdateMechanism(DummyLocationMaker)
                     Timber.d("Dummy updates enabled")
                 }
                 ACTION_DISABLE_DUMMY_UPDATES -> {
-                    OkHttpClientWrapper.dummyLocationMaker = IdentityLocationMaker
+                    getter.setDummyUpdateMechanism(IdentityLocationMaker)
                     Timber.d("Dummy updates disabled")
                 }
                 ACTION_ENABLE_GPS_PERTURBATION -> {
-                    // TODO
-//                    OkHttpClientWrapper.gpsPerturbatorMaker = DummyLocationMaker
-                    Timber.d("Dummy updates enabled")
+                    getter.setGpsPerturbator(GpsPerturbator)
+                    Timber.d("Gps Perturbator enabled")
                 }
                 ACTION_DISABLE_GPS_PERTURBATION -> {
-                    OkHttpClientWrapper.gpsPerturbator = IdentityLocationMaker
-                    Timber.d("Dummy updates disabled")
+                    getter.setGpsPerturbator(IdentityLocationMaker)
+                    Timber.d("Gps Perturbator disabled")
                 }
             }
         }
