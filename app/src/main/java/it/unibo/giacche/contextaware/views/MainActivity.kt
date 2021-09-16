@@ -16,6 +16,8 @@ import it.unibo.giacche.contextaware.models.Status
 import it.unibo.giacche.contextaware.services.TrackingService
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DONT_SEND_LOCATIONS
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DO_SEND_LOCATIONS
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_START_OR_RESUME_SERVICE
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var serviceActivationSwitch: SwitchCompat
     private lateinit var dummyUpdatesSwitch: SwitchCompat
     private lateinit var gpsPerturbationSwitch: SwitchCompat
+    private lateinit var sendLocationsSwitch: SwitchCompat
     private lateinit var noiseTextView: TextView
     private lateinit var collectedFeaturesTextView: TextView
     private lateinit var collectedNoiseTextView: TextView
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         serviceActivationSwitch = findViewById(R.id.service_toggle)
         dummyUpdatesSwitch = findViewById(R.id.dummy_updates)
         gpsPerturbationSwitch = findViewById(R.id.gps_perturbation)
+        sendLocationsSwitch = findViewById(R.id.send_locations_toggle)
         noiseTextView = findViewById(R.id.noiseTextView)
         collectedFeaturesTextView = findViewById(R.id.collectedFeaturesTextView)
         collectedNoiseTextView = findViewById(R.id.collectedNoiseTextView)
@@ -69,6 +73,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         serviceActivationSwitch.setOnCheckedChangeListener { _, isChecked ->
             sendCommandToService(if (isChecked) ACTION_START_OR_RESUME_SERVICE else ACTION_STOP_SERVICE)
         }
+
+        sendLocationsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sendCommandToService(if (isChecked) ACTION_DO_SEND_LOCATIONS else ACTION_DONT_SEND_LOCATIONS)
+        }
+        sendLocationsSwitch.isChecked = true
 
         dummyUpdatesSwitch.setOnCheckedChangeListener { _, isChecked ->
             sendCommandToService(if (isChecked) ACTION_ENABLE_DUMMY_UPDATES else ACTION_DISABLE_DUMMY_UPDATES)

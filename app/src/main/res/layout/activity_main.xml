@@ -12,8 +12,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Activate Service"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/send_locations_toggle"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noiseTextView" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/send_locations_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:checked="false"
+        android:text="Send Locations"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/service_toggle"
         app:layout_constraintTop_toBottomOf="@+id/noiseTextView" />
 
     <TextView

@@ -3,8 +3,8 @@ package it.unibo.giacche.contextaware.utils
 import com.google.android.gms.location.LocationRequest
 
 object Constants {
-    const val DESTINATION_URL = "http://10.8.0.2:3000/locations"
-//    const val DESTINATION_URL = "https://context-aware-backend.herokuapp.com/locations"
+//    const val DESTINATION_URL = "http://10.8.0.2:3000/locations"
+    const val DESTINATION_URL = "https://context-aware-backend.herokuapp.com/locations"
 
     const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
     const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
@@ -29,7 +29,4 @@ object Constants {
 
     const val SEND_RETRY_TIMEOUT: Long = 2_500
     const val DUMMY_UPDATES = 10
-    const val DUMMY_MAX_RADIUS = 0.009
-    const val DUMMY_MIN_RADIUS = 0.0001
-    const val GPS_PERTURBATOR_DECIMALS = 3
 }

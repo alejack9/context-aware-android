@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.AndroidEntryPoint
 import it.unibo.giacche.contextaware.communication.*
+import it.unibo.giacche.contextaware.communication.senders.LocationSenderMockup
 import it.unibo.giacche.contextaware.models.FeatureFactory
 import it.unibo.giacche.contextaware.noise.CanReturnNoise
 import it.unibo.giacche.contextaware.location.privacymechanisms.DummyLocationMaker
@@ -16,6 +17,8 @@ import it.unibo.giacche.contextaware.models.Resource
 import it.unibo.giacche.contextaware.utils.Constants
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DONT_SEND_LOCATIONS
+import it.unibo.giacche.contextaware.utils.Constants.ACTION_DO_SEND_LOCATIONS
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_PAUSE_SERVICE
@@ -41,13 +44,15 @@ class TrackingService : LifecycleService() {
     lateinit var locationController: LocationController
 
     @Inject
-    lateinit var sender: CanSendLocation
+    lateinit var defaultSender: CanSendLocation
 
     @Inject
     lateinit var getter: CanReceiveNoise
 
     @Inject
     lateinit var audioManager: CanReturnNoise
+
+    private lateinit var sender: CanSendLocation
 
     companion object {
         val isActive = MutableLiveData<Boolean>()
@@ -186,6 +191,14 @@ class TrackingService : LifecycleService() {
                 ACTION_DISABLE_GPS_PERTURBATION -> {
                     getter.setGpsPerturbator(IdentityLocationMaker)
                     Timber.d("Gps Perturbator disabled")
+                }
+                ACTION_DO_SEND_LOCATIONS -> {
+                    Timber.d("Setting sender to default")
+                    sender = defaultSender
+                }
+                ACTION_DONT_SEND_LOCATIONS -> {
+                    Timber.d("Setting sender to mockup")
+                    sender = LocationSenderMockup()
                 }
             }
         }
