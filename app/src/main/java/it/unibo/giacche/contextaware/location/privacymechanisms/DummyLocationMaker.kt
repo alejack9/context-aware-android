@@ -3,7 +3,6 @@ package it.unibo.giacche.contextaware.location.privacymechanisms
 import android.location.Location
 import it.unibo.giacche.contextaware.location.CanMakeDummyLocation
 import it.unibo.giacche.contextaware.models.ModifiedLocation
-import it.unibo.giacche.contextaware.utils.Constants
 import it.unibo.giacche.contextaware.utils.Constants.DUMMY_MAX_RADIUS
 import it.unibo.giacche.contextaware.utils.Constants.DUMMY_MIN_RADIUS
 import kotlin.math.cos
