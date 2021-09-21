@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         checkLocationTrackerAvailability()
 
         serviceActivationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sendCommandToService(if (sendLocationsSwitch.isChecked) ACTION_DO_SEND_LOCATIONS else ACTION_DONT_SEND_LOCATIONS )
             sendCommandToService(if (isChecked) ACTION_START_OR_RESUME_SERVICE else ACTION_STOP_SERVICE)
         }
 
