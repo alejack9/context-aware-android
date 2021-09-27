@@ -15,11 +15,12 @@ import org.geojson.FeatureCollection
 class LocationSender : CanSendLocation {
     companion object {
         private val client = OkHttpClient()
+        private const val suffix = "locations"
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun send(features: FeatureCollection) = withContext(Dispatchers.IO) {
-        val request = Request.Builder().url(Constants.DESTINATION_URL)
+        val request = Request.Builder().url(Constants.DESTINATION_URL + suffix)
             .post(
                 ObjectMapper().writeValueAsString(features)
                     .toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()!!)

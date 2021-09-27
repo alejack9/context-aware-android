@@ -9,10 +9,7 @@ import it.unibo.giacche.contextaware.communication.*
 import it.unibo.giacche.contextaware.communication.senders.LocationSenderMockup
 import it.unibo.giacche.contextaware.models.FeatureFactory
 import it.unibo.giacche.contextaware.noise.CanReturnNoise
-import it.unibo.giacche.contextaware.location.privacymechanisms.DummyLocationMaker
-import it.unibo.giacche.contextaware.location.privacymechanisms.IdentityLocationMaker
 import it.unibo.giacche.contextaware.location.LocationController
-import it.unibo.giacche.contextaware.location.privacymechanisms.GpsPerturbator
 import it.unibo.giacche.contextaware.models.Resource
 import it.unibo.giacche.contextaware.utils.Constants
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
@@ -177,19 +174,19 @@ class TrackingService : LifecycleService() {
                     Timber.d("Service Stopped")
                 }
                 ACTION_ENABLE_DUMMY_UPDATES -> {
-                    getter.setDummyUpdateMechanism(DummyLocationMaker)
+                    getter.enableDummyUpdates(true)
                     Timber.d("Dummy updates enabled")
                 }
                 ACTION_DISABLE_DUMMY_UPDATES -> {
-                    getter.setDummyUpdateMechanism(IdentityLocationMaker)
+                    getter.enableDummyUpdates(false)
                     Timber.d("Dummy updates disabled")
                 }
                 ACTION_ENABLE_GPS_PERTURBATION -> {
-                    getter.setGpsPerturbator(GpsPerturbator)
+                    getter.enableGpsPerturbator(true)
                     Timber.d("Gps Perturbator enabled")
                 }
                 ACTION_DISABLE_GPS_PERTURBATION -> {
-                    getter.setGpsPerturbator(IdentityLocationMaker)
+                    getter.enableGpsPerturbator(false)
                     Timber.d("Gps Perturbator disabled")
                 }
                 ACTION_DO_SEND_LOCATIONS -> {
