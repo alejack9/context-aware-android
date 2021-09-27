@@ -30,8 +30,4 @@ object Constants {
     const val AUDIO_DURATION = 1_000
 
     const val SEND_RETRY_TIMEOUT: Long = 2_500
-    const val DUMMY_UPDATES = 10
-    const val DUMMY_MAX_RADIUS = 0.004
-    const val DUMMY_MIN_RADIUS = 0.0005
-    const val GPS_PERTURBATOR_DECIMALS = 3
 }
