@@ -15,7 +15,7 @@ import org.geojson.FeatureCollection
 class LocationSender : CanSendLocation {
     companion object {
         private val client = OkHttpClient()
-        private const val suffix = "locations"
+        private const val suffix = "trusted"
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
