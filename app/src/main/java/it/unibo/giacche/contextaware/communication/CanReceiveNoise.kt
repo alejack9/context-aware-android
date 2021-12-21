@@ -6,12 +6,4 @@ interface CanReceiveNoise {
     suspend fun getNoise(
         location: Location
     ): Double?
-
-    fun enableDummyUpdates(
-        enable: Boolean
-    )
-
-    fun enableGpsPerturbator(
-        enable: Boolean
-    )
 }

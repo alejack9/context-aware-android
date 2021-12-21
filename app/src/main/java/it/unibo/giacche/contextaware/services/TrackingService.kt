@@ -12,12 +12,8 @@ import it.unibo.giacche.contextaware.noise.CanReturnNoise
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.models.Resource
 import it.unibo.giacche.contextaware.utils.Constants
-import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_DUMMY_UPDATES
-import it.unibo.giacche.contextaware.utils.Constants.ACTION_DISABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DONT_SEND_LOCATIONS
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_DO_SEND_LOCATIONS
-import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_DUMMY_UPDATES
-import it.unibo.giacche.contextaware.utils.Constants.ACTION_ENABLE_GPS_PERTURBATION
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_PAUSE_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 import it.unibo.giacche.contextaware.utils.Constants.ACTION_STOP_SERVICE
@@ -153,7 +149,7 @@ class TrackingService : LifecycleService() {
     }
 
     // Called when we send an intent to the service
-// three possible actions to send: resume/pause/stop
+    // three possible actions to send: resume/pause/stop
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when (it.action) {
@@ -172,22 +168,6 @@ class TrackingService : LifecycleService() {
                 ACTION_STOP_SERVICE -> {
                     killService()
                     Timber.d("Service Stopped")
-                }
-                ACTION_ENABLE_DUMMY_UPDATES -> {
-                    getter.enableDummyUpdates(true)
-                    Timber.d("Dummy updates enabled")
-                }
-                ACTION_DISABLE_DUMMY_UPDATES -> {
-                    getter.enableDummyUpdates(false)
-                    Timber.d("Dummy updates disabled")
-                }
-                ACTION_ENABLE_GPS_PERTURBATION -> {
-                    getter.enableGpsPerturbator(true)
-                    Timber.d("Gps Perturbator enabled")
-                }
-                ACTION_DISABLE_GPS_PERTURBATION -> {
-                    getter.enableGpsPerturbator(false)
-                    Timber.d("Gps Perturbator disabled")
                 }
                 ACTION_DO_SEND_LOCATIONS -> {
                     Timber.d("Setting sender to default")

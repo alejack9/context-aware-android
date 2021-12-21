@@ -4,19 +4,30 @@ import android.location.Location
 import org.geojson.Feature
 import org.geojson.Point
 import it.unibo.giacche.contextaware.utils.Constants
+import it.unibo.giacche.contextaware.utils.PrivacyConfiguration
 
 object FeatureFactory {
-    fun build(location : Location, noise: Double) = Feature().apply {
+    var n = 0
+    fun build(location: Location, noise: Double) = Feature().apply {
         geometry = Point(location.longitude, location.latitude)
-        properties = mapOf(
-            "timeStamp" to location.time,
-            "noiseLevel" to noise,
-            "dummyLocation" to Constants.DUMMY_UPDATES,
-            "gpsPerturbated" to Constants.GPS_PERTURBATOR,
-            "perturbatorDecimals" to Constants.GPS_PERTURBATOR_DECIMALS,
-            "dummyUpdatesCount" to Constants.DUMMY_UPDATES_COUNT,
-            "dummyUpdatesRadiusMin" to Constants.DUMMY_MIN_RADIUS,
-            "dummyUpdatesRadiusMax" to Constants.DUMMY_MAX_RADIUS
-        )
+        properties = GeoJSONProperties(
+            reqId = PrivacyConfiguration.REQ_ID,
+            reqNr = n++,
+            timeStamp = location.time,
+            noiseLevel = noise,
+            alpha = PrivacyConfiguration.ALPHA_ENABLED,
+            alphaValue = PrivacyConfiguration.ALPHA_VALUE,
+            cloaking = PrivacyConfiguration.SPATIAL_CLOAKING_ENABLED,
+            cloakingTimeout = PrivacyConfiguration.SP_CL_TIMEOUT,
+            cloakingK = PrivacyConfiguration.SP_CL_K,
+            cloakingSizeX = PrivacyConfiguration.SP_CL_RANGEX,
+            cloakingSizeY = PrivacyConfiguration.SP_CL_RANGEY,
+            dummyLocation = PrivacyConfiguration.DUMMY_UPDATES_ENABLED,
+            dummyUpdatesCount = PrivacyConfiguration.D_UP_COUNT,
+            dummyUpdatesRadiusMin = PrivacyConfiguration.D_UP_MIN,
+            dummyUpdatesRadiusStep = PrivacyConfiguration.D_UP_RANGE,
+            gpsPerturbated = PrivacyConfiguration.GPS_PERT_ENABLED,
+            perturbatorDecimals = PrivacyConfiguration.GPS_PERT_REAL_DECIMALS
+        ).toMap()
     }
 }

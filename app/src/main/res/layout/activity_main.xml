@@ -20,43 +20,53 @@
         android:id="@+id/send_locations_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:checked="false"
         android:text="Send Locations"
+        app:layout_constraintBottom_toBottomOf="@+id/service_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/service_toggle"
-        app:layout_constraintTop_toBottomOf="@+id/noiseTextView" />
+        app:layout_constraintTop_toTopOf="@+id/service_toggle" />
 
     <TextView
         android:id="@+id/noiseTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Wait for it..."
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/dummy_updates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Dummy Updates"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/service_toggle" />
+        app:layout_constraintTop_toBottomOf="@+id/loadingProgressBar" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/gps_perturbation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Gps Perturbation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dummy_updates" />
+        app:layout_constraintTop_toBottomOf="@+id/service_toggle" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/dummy_updates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Dummy Updates"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gps_perturbation" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/spatial_cloaking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Spatial Cloaking"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dumRange" />
 
     <TextView
         android:id="@+id/collectedFeaturesTextView"
@@ -67,7 +77,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gps_perturbation" />
+        app:layout_constraintTop_toBottomOf="@+id/use_alpha" />
 
     <TextView
         android:id="@+id/collectedNoiseTextView"
@@ -79,5 +89,304 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/collectedFeaturesTextView" />
+
+    <EditText
+        android:id="@+id/realDecimals"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/gps_perturbation"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/gps_perturbation"
+        android:text="3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Min"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dummy_updates"
+        app:layout_constraintStart_toEndOf="@+id/dummy_updates"
+        app:layout_constraintTop_toTopOf="@+id/dummy_updates" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Value"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/use_alpha"
+        app:layout_constraintStart_toEndOf="@+id/use_alpha"
+        app:layout_constraintTop_toTopOf="@+id/use_alpha" />
+
+    <TextView
+        android:id="@+id/alphaValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.5"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/alphaValue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/alphaValue"
+        app:layout_constraintTop_toTopOf="@+id/alphaValue" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Real Decimals"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/gps_perturbation"
+        app:layout_constraintStart_toEndOf="@+id/gps_perturbation"
+        app:layout_constraintTop_toTopOf="@+id/gps_perturbation" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="Range"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dumRange"
+        app:layout_constraintStart_toStartOf="@+id/dummy_updates"
+        app:layout_constraintTop_toTopOf="@+id/dumRange" />
+
+    <EditText
+        android:id="@+id/dumMin"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:enabled="false"
+        android:inputType="number"
+        android:text="1500"
+        app:layout_constraintBottom_toBottomOf="@+id/dummy_updates"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/dummy_updates" />
+
+    <EditText
+        android:id="@+id/dumRange"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="250"
+        android:enabled="false"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/dumMin" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="m"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dumMin"
+        app:layout_constraintStart_toEndOf="@+id/dumMin"
+        app:layout_constraintTop_toTopOf="@+id/dumMin" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="m"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dumRange"
+        app:layout_constraintStart_toEndOf="@+id/dumRange"
+        app:layout_constraintTop_toTopOf="@+id/dumRange" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="m"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatCloakRangeX"
+        app:layout_constraintStart_toEndOf="@+id/spatCloakRangeX"
+        app:layout_constraintTop_toTopOf="@+id/spatCloakRangeX" />
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:text="m"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatCloakRangeY"
+        app:layout_constraintStart_toEndOf="@+id/spatCloakRangeY"
+        app:layout_constraintTop_toTopOf="@+id/spatCloakRangeY" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="ms"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatCloakTimeout"
+        app:layout_constraintStart_toEndOf="@+id/spatCloakTimeout"
+        app:layout_constraintTop_toTopOf="@+id/spatCloakTimeout" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Count"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView1"
+        app:layout_constraintStart_toEndOf="@+id/textView1"
+        app:layout_constraintTop_toTopOf="@+id/textView1" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="k"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/spatCloakRangeX" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Timeout"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatial_cloaking"
+        app:layout_constraintStart_toEndOf="@+id/spatial_cloaking"
+        app:layout_constraintTop_toTopOf="@+id/spatial_cloaking" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="x"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatCloakRangeX"
+        app:layout_constraintStart_toStartOf="@+id/spatial_cloaking"
+        app:layout_constraintTop_toTopOf="@+id/spatCloakRangeX" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="y"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spatCloakRangeX"
+        app:layout_constraintStart_toEndOf="@+id/textView11"
+        app:layout_constraintTop_toTopOf="@+id/spatCloakRangeX" />
+
+    <EditText
+        android:id="@+id/dumCount"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="number"
+        android:text="10"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+    <EditText
+        android:id="@+id/spatialK"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="number"
+        android:text="10"
+        app:layout_constraintBottom_toBottomOf="@+id/textView14"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintStart_toStartOf="@+id/spatCloakRangeX"
+        app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+    <EditText
+        android:id="@+id/spatCloakTimeout"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="500"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toTopOf="@+id/textView8" />
+
+    <EditText
+        android:id="@+id/spatCloakRangeX"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="number"
+        android:text="500"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/spatCloakTimeout" />
+
+    <EditText
+        android:id="@+id/spatCloakRangeY"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:enabled="false"
+        android:inputType="number"
+        android:text="500"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/use_alpha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Use Alpha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spatialK" />
+
+    <SeekBar
+        android:id="@+id/alphaValue"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:max="1000"
+        android:progress="500"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

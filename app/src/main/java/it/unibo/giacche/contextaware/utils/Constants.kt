@@ -3,16 +3,18 @@ package it.unibo.giacche.contextaware.utils
 import com.google.android.gms.location.LocationRequest
 
 object Constants {
-    const val DESTINATION_URL = "http://192.168.1.100:3000/"
+    const val DESTINATION_URL = "http://192.168.1.89:3001/"
+    const val GET_ENDPOINT = DESTINATION_URL
+    const val SEND_ENDPOINT = DESTINATION_URL
 //    const val DESTINATION_URL = "https://context-aware-backend.herokuapp.com/"
+
+    const val ID_ENDPOINT = DESTINATION_URL + "id"
+    const val SHARED_PREFS_NAME = "it.unibo.giacche.contextaware"
+    const val REQ_ID_KEY = "$SHARED_PREFS_NAME.ID"
 
     const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
     const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
     const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
-    const val ACTION_ENABLE_DUMMY_UPDATES = "ACTION_ENABLE_DUMMY_UPDATES"
-    const val ACTION_DISABLE_DUMMY_UPDATES = "ACTION_DISABLE_DUMMY_UPDATES"
-    const val ACTION_ENABLE_GPS_PERTURBATION = "ACTION_ENABLE_GPS_PERTURBATION"
-    const val ACTION_DISABLE_GPS_PERTURBATION = "ACTION_DISABLE_GPS_PERTURBATION"
     const val ACTION_DONT_SEND_LOCATIONS = "ACTION_DONT_SEND_LOCATIONS"
     const val ACTION_DO_SEND_LOCATIONS = "ACTION_DO_SEND_LOCATIONS"
 
@@ -31,10 +33,17 @@ object Constants {
 
     const val SEND_RETRY_TIMEOUT: Long = 2_500
 
-    const val DUMMY_UPDATES = 10
-    const val GPS_PERTURBATOR = true
-    const val DUMMY_UPDATES_COUNT = 10
-    const val DUMMY_MAX_RADIUS = 0.004
-    const val DUMMY_MIN_RADIUS = 0.0005
-    const val GPS_PERTURBATOR_DECIMALS = 3
+
+    const val DEFAULT_GPS_PERT_ENABLED = false
+    const val DEFAULT_GPS_PERT_REAL_DECIMALS = 3
+    const val DEFAULT_DUMMY_UPDATES_ENABLED = false
+    const val DEFAULT_D_UP_MIN: Double = 1500.0
+    const val DEFAULT_D_UP_RANGE: Double = 250.0
+    const val DEFAULT_D_UP_COUNT = 10
+    const val DEFAULT_SPATIAL_CLOAKING_ENABLED = false
+    const val DEFAULT_SP_CL_TIMEOUT = 5000
+    const val DEFAULT_SP_CL_RANGE: Double = 500.0
+    const val DEFAULT_SP_CL_K = 2
+    const val DEFAULT_ALPHA_ENABLED = false
+    const val DEFAULT_ALPHA_VALUE = 0.5
 }

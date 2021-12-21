@@ -15,6 +15,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
 import it.unibo.giacche.contextaware.R
 import it.unibo.giacche.contextaware.communication.getters.NoiseGetter
+import it.unibo.giacche.contextaware.communication.getters.NoiseGetterMockup
 import it.unibo.giacche.contextaware.location.LocationController
 import it.unibo.giacche.contextaware.communication.senders.LocationSender
 import it.unibo.giacche.contextaware.noise.AudioManager
@@ -56,7 +57,6 @@ object ServiceModule {
         .setOngoing(true) // can't be swiped away
         .setSmallIcon(R.drawable.ic_baseline_pin_drop_24)
         .setContentTitle("Context Aware App")
-//        .setContentText("00:00:00")
         .setContentIntent(pendingIntent)
 
     @ServiceScoped
@@ -79,12 +79,16 @@ object ServiceModule {
     ) = LocationController(fused)
 
     @Provides
-    fun provideLocationSenderMockup(
-    ) = LocationSenderMockup()
-
-    @Provides
     fun provideNoiseGetter(
     ) = NoiseGetter()
+
+    @Provides
+    fun provideNoiseGetterMockup(
+    ) = NoiseGetterMockup()
+
+    @Provides
+    fun provideLocationSenderMockup(
+    ) = LocationSenderMockup()
 
     @Provides
     fun provideLocationSender(

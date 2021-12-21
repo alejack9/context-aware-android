@@ -10,26 +10,27 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.wait
 import org.geojson.FeatureCollection
 
 class LocationSender : CanSendLocation {
     companion object {
         private val client = OkHttpClient()
-        private const val suffix = "trusted"
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun send(features: FeatureCollection) = withContext(Dispatchers.IO) {
-        val request = Request.Builder().url(Constants.DESTINATION_URL + suffix)
+        val request = Request.Builder().url(Constants.SEND_ENDPOINT)
             .post(
                 ObjectMapper().writeValueAsString(features)
                     .toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull()!!)
             )
             .build()
-        var sent: Boolean
-        do {
-            sent = client.newCall(request).execute().isSuccessful
-            if (!sent) delay(Constants.SEND_RETRY_TIMEOUT)
-        } while (!sent)
+//        var sent: Boolean
+//        do {
+//        sent = client.newCall(request).execute().isSuccessful
+        client.newCall(request).execute().wait()
+//            if (!sent) delay(Constants.SEND_RETRY_TIMEOUT)
+//        } while (!sent)
     }
 }

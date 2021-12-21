@@ -7,7 +7,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import it.unibo.giacche.contextaware.services.TrackingService
 import it.unibo.giacche.contextaware.utils.Constants
 
 class LocationController(

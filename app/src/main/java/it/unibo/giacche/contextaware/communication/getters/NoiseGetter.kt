@@ -12,9 +12,6 @@ import okhttp3.Request
 class NoiseGetter : CanReceiveNoise {
     companion object {
         private val client = OkHttpClient()
-        private const val suffix = "trusted"
-        private var dummyUpdatesEnabled = false
-        private var perturbatorEnabled = false
     }
 
     @Suppress("BlockingMethodInNonBlockingContext")
@@ -28,17 +25,9 @@ class NoiseGetter : CanReceiveNoise {
             }
     }
 
-    override fun enableDummyUpdates(enable: Boolean) {
-        dummyUpdatesEnabled = enable
-    }
-
-    override fun enableGpsPerturbator(enable: Boolean) {
-        perturbatorEnabled = enable
-    }
-
     private fun createRequest(location: Location): Request {
         return Request.Builder().url(
-            (Constants.DESTINATION_URL + suffix).toHttpUrlOrNull()!!.newBuilder()
+            (Constants.GET_ENDPOINT).toHttpUrlOrNull()!!.newBuilder()
                 .addQueryParameter(
                     "lat",
                     location.latitude.toString()
@@ -46,12 +35,6 @@ class NoiseGetter : CanReceiveNoise {
                 .addQueryParameter(
                     "long",
                     location.longitude.toString()
-                )
-                .addQueryParameter(
-                    "perturbatorEnabled", perturbatorEnabled.toString()
-                )
-                .addQueryParameter(
-                    "dummyUpdatesEnabled", dummyUpdatesEnabled.toString()
                 )
                 .build().toString()
         ).build()
